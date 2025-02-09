@@ -1,0 +1,7 @@
+Filename: COVID1931.jpg
+Predicted Class Label: COVID19
+Class Probabilities:
+NORMAL: 0.0022
+TUBERCULOSIS: 0.0267
+PNEUMONIA: 0.0000
+COVID19: 0.9707

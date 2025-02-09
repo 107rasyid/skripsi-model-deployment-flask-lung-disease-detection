@@ -6,10 +6,11 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.layers import Layer
 from tensorflow.keras import backend as K
 from tensorflow.keras.utils import custom_object_scope
-from flask import Flask, render_template, request, redirect, send_file, url_for
+from flask import Flask, render_template, request, redirect, send_file, url_for, after_this_request
 from werkzeug.utils import secure_filename
 import matplotlib.pyplot as plt
 import zipfile
+import shutil
 
 # Initialize app
 app = Flask(__name__)
@@ -102,15 +103,50 @@ def segment_image(image, model, threshold=0.5):
 def classify_image(segmented_image, model):
     segmented_image_rgb = np.repeat(segmented_image[..., np.newaxis], 3, axis=-1)
     predictions = model.predict(np.expand_dims(segmented_image_rgb, axis=0))
-    predicted_class = np.argmax(predictions, axis=-1)[0]
+    print("Predictions (Raw Output):", predictions)
+    print("Predictions Shape:", predictions.shape)
+    if np.ndim(predictions) == 0:
+        predictions = np.array([predictions])
+    predicted_class = np.argmax(predictions)
     class_labels = ['NORMAL', 'TUBERCULOSIS', 'PNEUMONIA', 'COVID19']
-    return predicted_class, class_labels[predicted_class]
+    return predicted_class, class_labels[predicted_class], predictions[0], class_labels
+
+def save_prediction_log(result_folder, filename, predictions, predicted_class_label, class_labels):
+    # Pastikan predictions berbentuk array yang bisa diiterasi
+    if not isinstance(predictions, np.ndarray):
+        predictions = np.array(predictions)
+
+    log_path = f"{result_folder}/{filename}_log.txt"
+    with open(log_path, "w") as log_file:
+        log_file.write(f"Filename: {filename}\n")
+        log_file.write(f"Predicted Class Label: {predicted_class_label}\n")
+        log_file.write("Class Probabilities:\n")
+        for i, prob in enumerate(predictions.flatten()):  # Flatten untuk akses langsung nilai
+            log_file.write(f"{class_labels[i]}: {float(prob):.4f}\n")
+    return log_path
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# Fungsi untuk membersihkan folder sementara
+def cleanup_temp_folders():
+    try:
+        # Hapus semua file di uploads dan results
+        shutil.rmtree(app.config['UPLOAD_FOLDER'])
+        shutil.rmtree(app.config['RESULT_FOLDER'])
+        shutil.rmtree(app.config['ZIP_FOLDER'])
+        # Pastikan folder tetap ada setelah dihapus
+        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+        os.makedirs(app.config['RESULT_FOLDER'], exist_ok=True)
+        os.makedirs(app.config['ZIP_FOLDER'], exist_ok=True)
+    except Exception as e:
+        print(f"Error cleaning up: {e}")
+
+# Route untuk upload file dan proses
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
+    # Cleanup folder setiap kali upload baru dilakukan
+    cleanup_temp_folders()
     if request.method == 'POST':
         file = request.files['file']
         if file:
@@ -127,7 +163,8 @@ def upload_file():
             predicted_mask = segment_image(original_image, unet_model)
             segmented_image = original_image * predicted_mask
             segmented_image_normalized = segmented_image.astype(np.float32) / np.max(segmented_image)
-            predicted_class_idx, predicted_class_label = classify_image(segmented_image_normalized, cnn_model)
+            predicted_class_idx, predicted_class_label, predictions, class_labels = classify_image(segmented_image_normalized, cnn_model)
+            log_path = save_prediction_log(app.config['RESULT_FOLDER'], filename, predictions, predicted_class_label, class_labels)
 
             # Simpan citra asli
             original_image_filename = f"original_{filename}"
@@ -147,24 +184,37 @@ def upload_file():
             # Buat file ZIP berisi semua hasil
             zip_filename = f"{filename.rsplit('.', 1)[0]}_results.zip"
             zip_path = os.path.join(app.config['ZIP_FOLDER'], zip_filename)
+            
             with zipfile.ZipFile(zip_path, 'w') as zipf:
-                zipf.write(filepath, os.path.basename(filepath))  # Tambah citra asli
-                zipf.write(result_path, os.path.basename(result_filename))  # Tambah hasil segmentasi
-                zipf.write(mask_result_path, os.path.basename(mask_result_filename))  # Tambah mask prediksi
+                files_to_add = [
+                    (filepath, "Original Image"),
+                    (result_path, "Segmented Result"),
+                    (mask_result_path, "Mask Result"),
+                    (log_path, "Log File")
+                ]
+                
+                for file_path, description in files_to_add:
+                    if os.path.exists(file_path):
+                        zipf.write(file_path, os.path.basename(file_path))
 
             # Redirect ke halaman hasil
-            return render_template('result.html',
-                                   original_image=filename,
-                                   result_image=result_filename,
-                                   predicted_class=predicted_class_label,
-                                   predicted_mask=mask_result_filename,
-                                   zip_path=zip_path)
-
+            return render_template(
+                'result.html',
+                original_image=filename,
+                result_image=result_filename,
+                predicted_class=predicted_class_label,
+                predicted_mask=mask_result_filename,
+                zip_filename=zip_filename
+            )
     return render_template('index.html')
 
-@app.route('/download/<path:filename>')
+# Route untuk download ZIP langsung dari static/zips/
+@app.route('/download/<filename>')
 def download_file(filename):
-    return send_file(filename, as_attachment=True)
+    zip_file_path = os.path.join(ZIP_FOLDER, filename)
+    if os.path.exists(zip_file_path):
+        return send_file(zip_file_path, as_attachment=True)
+    return "File tidak tersedia."
 
 # Jalankan aplikasi
 if __name__ == '__main__':

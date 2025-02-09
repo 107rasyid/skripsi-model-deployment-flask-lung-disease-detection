@@ -4,21 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <title>Unggah Citra Medis</title>
+    <title>Sistem Deteksi Penyakit Paru-Paru</title>
 </head>
-<body class="bg-light">
-    <div class="container mt-5">
+<body class="d-flex flex-column min-vh-100" style="background-color: #eceff1;">
+    <!-- Header -->
+    <header class="text-center py-3 mb-4" style="background-color: #eceff1;">
+        <h1 class="fw-bold text-dark" style="font-size: 2rem;">Sistem Deteksi Penyakit Paru-Paru</h1>
+    </header>
+    
+
+    <!-- Main Content -->
+    <div class="container mt-3">
         <div class="card p-4 shadow-sm">
-            <h2 class="text-center">Unggah Citra Medis</h2>
+            <h2 class="text-center text-dark">Unggah Citra X-ray</h2>
             <form action="/" method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
-                    <label for="file" class="form-label">Pilih Berkas Gambar</label>
+                    <label for="file" class="form-label">Pilih Berkas Citra</label>
                     <input class="form-control" type="file" name="file" id="file" required>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Unggah dan Proses</button>
+                <button type="submit" class="btn custom-btn w-100">Unggah dan Proses</button>
             </form>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="text-white text-center py-3 mt-auto" style="background-color: #607d8b;">
+        <small>© 2025 Sistem Deteksi Penyakit Paru-Paru | Dibuat oleh Rasyid Alfiansyah</small>
+    </footer>
+
+    <style>
+        .custom-btn {
+            background-color: #1e88e5;
+            color: #ffffff;
+            border: none;
+        }
+
+        .custom-btn:hover {
+            background-color: #1565c0;
+            color: #ffffff;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
