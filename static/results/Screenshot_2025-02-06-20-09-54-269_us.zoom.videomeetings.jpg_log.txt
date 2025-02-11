@@ -1,0 +1,7 @@
+Filename: Screenshot_2025-02-06-20-09-54-269_us.zoom.videomeetings.jpg
+Predicted Class Label: COVID19
+Class Probabilities:
+NORMAL: 0.0000
+TUBERCULOSIS: 0.2019
+PNEUMONIA: 0.0000
+COVID19: 0.7983
