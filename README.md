@@ -41,10 +41,10 @@ Fitur utama aplikasi:
 Berikut adalah tampilan antarmuka aplikasi:
 
 1. **Halaman Awal**  
-   ![Halaman Awal](main/templates/halaman_awal.png)
+   ![Halaman Awal](templates/halaman_awal.PNG)
 
 2. **Halaman Hasil**  
-   ![Halaman Hasil](main/templates/halaman_hasil.png)
+   ![Halaman Hasil](templates/halaman_hasil.PNG)
 
 ---
 
