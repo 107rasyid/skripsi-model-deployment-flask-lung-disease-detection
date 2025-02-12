@@ -50,21 +50,21 @@ Berikut adalah tampilan antarmuka aplikasi:
 
 ## Cara Menjalankan Proyek
 
-### 1. Clone Repository
+# 1. Clone Repository
 ```bash
 git clone https://github.com/username/skripsi-model-deployment-flask-lung-disease-detection.git
 cd skripsi-model-deployment-flask-lung-disease-detection
 
-### 2. Buat Virtual Environment
+# 2. Buat Virtual Environment
 python -m venv venv
 source venv/bin/activate  # Untuk Linux/macOS
 venv\Scripts\activate     # Untuk Windows
 
-### 3. Install Dependencies
+# 3. Install Dependencies
 pip install -r requirements.txt
 
-### 4. Jalankan Aplikasi Flask
+# 4. Jalankan Aplikasi Flask
 python app.py
 
-### 5. Akses aplikasi di browser
-# Buka http://127.0.0.1:5000/
+# 5. Akses aplikasi di browser
+Buka http://127.0.0.1:5000/
