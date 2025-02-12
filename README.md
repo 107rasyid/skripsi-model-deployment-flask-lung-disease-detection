@@ -48,10 +48,10 @@ Berikut adalah tampilan antarmuka aplikasi:
 
 ---
 
-Cara Menjalankan Proyek
+## Cara Menjalankan Proyek
 
-1. Clone Repository
 ```bash
+1. Clone Repository
 git clone https://github.com/username/skripsi-model-deployment-flask-lung-disease-detection.git
 cd skripsi-model-deployment-flask-lung-disease-detection
 
@@ -67,3 +67,4 @@ pip install -r requirements.txt
 python app.py
 
 Aplikasi akan berjalan di http://127.0.0.1:5000/.
+'''
