@@ -2,12 +2,6 @@
 
 Repositori untuk deployment model skripsi berbasis dashboard website menggunakan Flask.
 
-## Deteksi Penyakit Paru-Paru dari Citra X-Ray Menggunakan Segmentasi U-Net dan Klasifikasi CNN
-
-Berdasarkan hasil penelitian, model yang dibuat telah berhasil melakukan deteksi penyakit paru-paru dari citra X-ray dengan baik.  
-- **Model U-Net** berhasil mencapai **nilai Intersection over Union (IoU) sebesar 91,69%**, menunjukkan kinerja yang baik dalam melakukan segmentasi region paru-paru.  
-- **Model CNN** menunjukkan **akurasi sebesar 95,70%**, mencerminkan performa yang baik dalam melakukan klasifikasi **COVID-19, pneumonia, tuberculosis, dan paru-paru normal**.  
-
 ### Perbandingan Performa Model CNN dengan Transfer Learning
 
 | Model            | Waktu Pelatihan | Loss  | Akurasi  |
