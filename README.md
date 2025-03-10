@@ -1,27 +1,5 @@
 # skripsi-model-deployment-flask-lung-disease-detection
 
-Repositori untuk deployment model skripsi berbasis dashboard website menggunakan Flask.
-
-### Perbandingan Performa Model CNN dengan Transfer Learning
-
-| Model            | Waktu Pelatihan | Loss  | Akurasi  |
-|-----------------|---------------|------|--------|
-| CNN yang diajukan | 756.85 s       | 0.2214 | **95.70%** |
-| MobileNetV2      | 904.26 s       | 0.1539 | **95.70%** |
-| Xception        | 687.54 s       | 0.2086 | 92.62% |
-| VGG19           | 1660.99 s      | 0.1721 | 94.06% |
-
-### Akurasi Perkelas (Recall) Tiap Model
-
-| Model            | Normal | Tuberculosis | Pneumonia | COVID-19 |
-|-----------------|--------|--------------|-----------|----------|
-| CNN yang diajukan | **96.25%** | 96.88% | **97.09%** | 87.93% |
-| MobileNetV2      | 94.37% | **100.00%** | 95.63% | **94.83%** |
-| Xception        | 91.25% | 96.88% | 93.69% | 87.93% |
-| VGG19           | 94.37% | 93.75% | 97.09% | 82.76% |
-
----
-
 ## Aplikasi Web
 
 Prototipe sistem diimplementasikan dalam bentuk aplikasi berbasis website menggunakan **Flask** sebagai backend dan **Jinja** sebagai template engine.  
